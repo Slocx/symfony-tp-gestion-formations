@@ -13,19 +13,19 @@ class Candidat
     #[ORM\Column(type: 'integer')]
     private $id;
 
-    #[ORM\Column(type: 'string', length: 60)]
+    #[ORM\Column(type: 'string', length: 255)]
     private $nom;
 
-    #[ORM\Column(type: 'string', length: 60)]
+    #[ORM\Column(type: 'string', length: 255)]
     private $prenom;
 
     #[ORM\Column(type: 'string', length: 255)]
-    private $email;
+    private $mail;
 
     #[ORM\Column(type: 'string', length: 255)]
-    private $numero_telephone;
+    private $tel;
 
-    #[ORM\Column(type: 'string', length: 255)]
+    #[ORM\ManyToOne(targetEntity: Promotion::class, inversedBy: 'candidats')]
     private $promotion;
 
     public function getId(): ?int
@@ -57,36 +57,36 @@ class Candidat
         return $this;
     }
 
-    public function getEmail(): ?string
+    public function getMail(): ?string
     {
-        return $this->email;
+        return $this->mail;
     }
 
-    public function setEmail(string $email): self
+    public function setMail(string $mail): self
     {
-        $this->email = $email;
+        $this->mail = $mail;
 
         return $this;
     }
 
-    public function getNumeroTelephone(): ?string
+    public function getTel(): ?string
     {
-        return $this->numero_telephone;
+        return $this->tel;
     }
 
-    public function setNumeroTelephone(string $numero_telephone): self
+    public function setTel(string $tel): self
     {
-        $this->numero_telephone = $numero_telephone;
+        $this->tel = $tel;
 
         return $this;
     }
 
-    public function getPromotion(): ?string
+    public function getPromotion(): ?Promotion
     {
         return $this->promotion;
     }
 
-    public function setPromotion(string $promotion): self
+    public function setPromotion(?Promotion $promotion): self
     {
         $this->promotion = $promotion;
 

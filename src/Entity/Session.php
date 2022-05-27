@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\SessionRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: SessionRepository::class)]
@@ -19,17 +21,24 @@ class Session
     #[ORM\Column(type: 'date')]
     private $date_fin;
 
-    #[ORM\Column(type: 'string', length: 60)]
+    #[ORM\Column(type: 'string', length: 255)]
     private $nom;
 
-    #[ORM\Column(type: 'string', length: 60)]
-    private $formateur;
-
-    #[ORM\Column(type: 'string', length: 60)]
+    #[ORM\ManyToOne(targetEntity: Promotion::class, inversedBy: 'sessions')]
+    #[ORM\JoinColumn(nullable: false)]
     private $promotion;
 
-    #[ORM\Column(type: 'string', length: 60)]
+    #[ORM\ManyToMany(targetEntity: Formateur::class, inversedBy: 'sessions')]
+    private $formateurs;
+
+    #[ORM\ManyToMany(targetEntity: Salle::class, inversedBy: 'sessions')]
     private $salle;
+
+    public function __construct()
+    {
+        $this->formateurs = new ArrayCollection();
+        $this->salle = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -72,38 +81,62 @@ class Session
         return $this;
     }
 
-    public function getFormateur(): ?string
-    {
-        return $this->formateur;
-    }
-
-    public function setFormateur(string $formateur): self
-    {
-        $this->formateur = $formateur;
-
-        return $this;
-    }
-
-    public function getPromotion(): ?string
+    public function getPromotion(): ?Promotion
     {
         return $this->promotion;
     }
 
-    public function setPromotion(string $promotion): self
+    public function setPromotion(?Promotion $promotion): self
     {
         $this->promotion = $promotion;
 
         return $this;
     }
 
-    public function getSalle(): ?string
+    /**
+     * @return Collection<int, Formateur>
+     */
+    public function getFormateurs(): Collection
+    {
+        return $this->formateurs;
+    }
+
+    public function addFormateur(Formateur $formateur): self
+    {
+        if (!$this->formateurs->contains($formateur)) {
+            $this->formateurs[] = $formateur;
+        }
+
+        return $this;
+    }
+
+    public function removeFormateur(Formateur $formateur): self
+    {
+        $this->formateurs->removeElement($formateur);
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Salle>
+     */
+    public function getSalle(): Collection
     {
         return $this->salle;
     }
 
-    public function setSalle(string $salle): self
+    public function addSalle(Salle $salle): self
     {
-        $this->salle = $salle;
+        if (!$this->salle->contains($salle)) {
+            $this->salle[] = $salle;
+        }
+
+        return $this;
+    }
+
+    public function removeSalle(Salle $salle): self
+    {
+        $this->salle->removeElement($salle);
 
         return $this;
     }

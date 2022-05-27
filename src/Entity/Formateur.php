@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\FormateurRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: FormateurRepository::class)]
@@ -13,17 +15,25 @@ class Formateur
     #[ORM\Column(type: 'integer')]
     private $id;
 
-    #[ORM\Column(type: 'string', length: 60)]
+    #[ORM\Column(type: 'string', length: 255)]
     private $nom;
 
-    #[ORM\Column(type: 'string', length: 60)]
+    #[ORM\Column(type: 'string', length: 255)]
     private $prenom;
 
     #[ORM\Column(type: 'string', length: 255)]
-    private $numero_telephone;
+    private $mail;
 
     #[ORM\Column(type: 'string', length: 255)]
-    private $email;
+    private $tel;
+
+    #[ORM\ManyToMany(targetEntity: Session::class, mappedBy: 'formateurs')]
+    private $sessions;
+
+    public function __construct()
+    {
+        $this->sessions = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -54,26 +64,53 @@ class Formateur
         return $this;
     }
 
-    public function getNumeroTelephone(): ?string
+    public function getMail(): ?string
     {
-        return $this->numero_telephone;
+        return $this->mail;
     }
 
-    public function setNumeroTelephone(string $numero_telephone): self
+    public function setMail(string $mail): self
     {
-        $this->numero_telephone = $numero_telephone;
+        $this->mail = $mail;
 
         return $this;
     }
 
-    public function getEmail(): ?string
+    public function getTel(): ?string
     {
-        return $this->email;
+        return $this->tel;
     }
 
-    public function setEmail(string $email): self
+    public function setTel(string $tel): self
     {
-        $this->email = $email;
+        $this->tel = $tel;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Session>
+     */
+    public function getSessions(): Collection
+    {
+        return $this->sessions;
+    }
+
+    public function addSession(Session $session): self
+    {
+        if (!$this->sessions->contains($session)) {
+            $this->sessions[] = $session;
+            $session->addFormateur($this);
+        }
+
+        return $this;
+    }
+
+    public function removeSession(Session $session): self
+    {
+        if ($this->sessions->removeElement($session)) {
+            $session->removeFormateur($this);
+        }
 
         return $this;
     }

@@ -13,17 +13,17 @@ class Organisme
     #[ORM\Column(type: 'integer')]
     private $id;
 
-    #[ORM\Column(type: 'string', length: 60)]
+    #[ORM\Column(type: 'string', length: 255)]
     private $nom;
 
     #[ORM\Column(type: 'string', length: 255)]
     private $adresse;
 
     #[ORM\Column(type: 'string', length: 255)]
-    private $numero_telephone;
+    private $tel;
 
     #[ORM\Column(type: 'string', length: 255)]
-    private $email_contact;
+    private $mail;
 
     public function getId(): ?int
     {
@@ -54,26 +54,26 @@ class Organisme
         return $this;
     }
 
-    public function getNumeroTelephone(): ?string
+    public function getTel(): ?string
     {
-        return $this->numero_telephone;
+        return $this->tel;
     }
 
-    public function setNumeroTelephone(string $numero_telephone): self
+    public function setTel(string $tel): self
     {
-        $this->numero_telephone = $numero_telephone;
+        $this->tel = $tel;
 
         return $this;
     }
 
-    public function getEmailContact(): ?string
+    public function getMail(): ?string
     {
-        return $this->email_contact;
+        return $this->mail;
     }
 
-    public function setEmailContact(string $email_contact): self
+    public function setMail(string $mail): self
     {
-        $this->email_contact = $email_contact;
+        $this->mail = $mail;
 
         return $this;
     }
